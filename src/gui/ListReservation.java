@@ -4,23 +4,21 @@
  * and open the template in the editor.
  */
 package gui;
-
 import com.codename1.components.SpanLabel;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
-import services.ServiceOffre;
-
+import services.ServiceReservation;
 /**
  *
- * @author Asus
+ * @author Iyadhtr
  */
-public class ListeCovoiturages extends Form {
-    
-    public ListeCovoiturages()
+public class ListReservation  extends Form {
+    public ListReservation()
     {
         SpanLabel sp = new SpanLabel();
-        //sp.setText(ServiceOffre.getInstance().getCovoiturages().toString());
-       // add(sp);
+        sp.setText(ServiceReservation.getInstance().getReservations().toString());
+        add(sp);
         //getToolbar().addMaterialCommandToLeftBar("", FontImage.MATERIAL_ARROW_BACK, e-> previous.showBack());
     }
+    
 }
