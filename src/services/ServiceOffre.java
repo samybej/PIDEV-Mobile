@@ -12,6 +12,8 @@ import com.codename1.io.NetworkEvent;
 import com.codename1.io.NetworkManager;
 import com.codename1.l10n.ParseException;
 import com.codename1.l10n.SimpleDateFormat;
+import com.codename1.messaging.Message;
+import com.codename1.ui.Display;
 import com.codename1.ui.events.ActionListener;
 import entities.Offre;
 import entities.Type;
@@ -62,7 +64,7 @@ public class ServiceOffre {
         return resultOK;
     }
      
-     public ArrayList<Offre> getCovoiturages()
+     public Map<Integer,List> getCovoiturages()
      {
          String url = Statics.BASE_URL+"api/covoiturages/209";
         req.setUrl(url);
@@ -71,6 +73,7 @@ public class ServiceOffre {
             @Override
             public void actionPerformed(NetworkEvent evt) {
                 try {
+                    
                     map = parseOffres(new String(req.getResponseData()));
                     req.removeResponseListener(this);
                 } catch (ParseException ex) {
@@ -79,12 +82,13 @@ public class ServiceOffre {
             }
         });
         NetworkManager.getInstance().addToQueueAndWait(req);
-        return offres;
+        return map;
      }
      
        public Map<Integer,List> parseOffres(String jsonText) throws ParseException{
         try {
             offres=new ArrayList<>();
+            types=new ArrayList<>();
             JSONParser j = new JSONParser();
             Map<String,Object> offresListJson = j.parseJSON(new CharArrayReader(jsonText.toCharArray()));
             
@@ -127,6 +131,7 @@ public class ServiceOffre {
                 t.setTmpArret((int)tmpArret);
                 t.setIdOffre((int)idOffre);
                 
+               // System.out.println(t);
                 
                 offres.add(o);
                 types.add(t);
@@ -140,6 +145,7 @@ public class ServiceOffre {
         } catch (IOException ex) {
             
         }
+     
         return map;
     }
 

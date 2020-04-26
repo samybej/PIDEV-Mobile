@@ -73,6 +73,11 @@ public class Type {
     public void setIdOffre(int idOffre) {
         this.idOffre = idOffre;
     }
+
+    @Override
+    public String toString() {
+        return "Type{" + "id=" + id + ", vitesse=" + vitesse + ", nbrArrets=" + nbrArrets + ", tmpArret=" + tmpArret + ", idOffre=" + idOffre + '}';
+    }
     
     
 }
