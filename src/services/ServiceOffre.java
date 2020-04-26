@@ -10,10 +10,12 @@ import com.codename1.io.ConnectionRequest;
 import com.codename1.io.JSONParser;
 import com.codename1.io.NetworkEvent;
 import com.codename1.io.NetworkManager;
+import com.codename1.l10n.ParseException;
+import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.ui.events.ActionListener;
 import entities.Offre;
 import java.io.IOException;
-import java.sql.Date;
+import java.util.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -64,15 +66,19 @@ public class ServiceOffre {
         req.addResponseListener(new ActionListener<NetworkEvent>() {
             @Override
             public void actionPerformed(NetworkEvent evt) {
-                offres = parseOffres(new String(req.getResponseData()));
-                req.removeResponseListener(this);
+                try {
+                    offres = parseOffres(new String(req.getResponseData()));
+                    req.removeResponseListener(this);
+                } catch (ParseException ex) {
+                    System.out.println("ahja");
+                }
             }
         });
         NetworkManager.getInstance().addToQueueAndWait(req);
         return offres;
      }
      
-       public ArrayList<Offre> parseOffres(String jsonText){
+       public ArrayList<Offre> parseOffres(String jsonText) throws ParseException{
         try {
             offres=new ArrayList<>();
             JSONParser j = new JSONParser();
@@ -83,13 +89,21 @@ public class ServiceOffre {
                 Offre o = new Offre();
                 float id = Float.parseFloat(obj.get("id").toString());
                 float nbPlace = Float.parseFloat(obj.get("nbPlace").toString());
+                float idOffreur = Float.parseFloat(((Map)obj.get("idOffreur")).get("id").toString());
+                float idClient = Float.parseFloat(((Map)obj.get("idOffreur")).get("id").toString());
                 String date = obj.get("date").toString();
-                Date date_new = Date.valueOf(date);
+                Date date_new = new SimpleDateFormat("yyyy-MM-dd").parse(date);
                 o.setId((int)id);
                 o.setNbPlace((int)nbPlace);
                 o.setDepart(obj.get("depart").toString());
                 o.setArrive(obj.get("arrive").toString());
                 o.setDate(date_new);
+                o.setTime(obj.get("time").toString());
+                o.setIdOffreur((int)idOffreur);
+                o.setIdClient((int)idClient);
+                o.setVehicule(obj.get("vehicule").toString());
+                o.setBagage(obj.get("bagage").toString());
+                
                 
                 offres.add(o);
             }

@@ -5,7 +5,7 @@
  */
 package entities;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  *
@@ -24,6 +24,126 @@ public class Offre {
     private int idClient;
     private String vehicule;
     private String bagage;
+
+    public Offre() {
+    }
+
+    public Offre(int nbPlace, String depart, String arrive, Date date, String time, float tarif, int idOffreur, int idClient, String vehicule, String bagage) {
+        this.nbPlace = nbPlace;
+        this.depart = depart;
+        this.arrive = arrive;
+        this.date = date;
+        this.time = time;
+        this.tarif = tarif;
+        this.idOffreur = idOffreur;
+        this.idClient = idClient;
+        this.vehicule = vehicule;
+        this.bagage = bagage;
+    }
+
+    public Offre(int id, int nbPlace, String depart, String arrive, Date date, String time, float tarif, int idOffreur, int idClient, String vehicule, String bagage) {
+        this.id = id;
+        this.nbPlace = nbPlace;
+        this.depart = depart;
+        this.arrive = arrive;
+        this.date = date;
+        this.time = time;
+        this.tarif = tarif;
+        this.idOffreur = idOffreur;
+        this.idClient = idClient;
+        this.vehicule = vehicule;
+        this.bagage = bagage;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getNbPlace() {
+        return nbPlace;
+    }
+
+    public void setNbPlace(int nbPlace) {
+        this.nbPlace = nbPlace;
+    }
+
+    public String getDepart() {
+        return depart;
+    }
+
+    public void setDepart(String depart) {
+        this.depart = depart;
+    }
+
+    public String getArrive() {
+        return arrive;
+    }
+
+    public void setArrive(String arrive) {
+        this.arrive = arrive;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public float getTarif() {
+        return tarif;
+    }
+
+    public void setTarif(float tarif) {
+        this.tarif = tarif;
+    }
+
+    public int getIdOffreur() {
+        return idOffreur;
+    }
+
+    public void setIdOffreur(int idOffreur) {
+        this.idOffreur = idOffreur;
+    }
+
+    public int getIdClient() {
+        return idClient;
+    }
+
+    public void setIdClient(int idClient) {
+        this.idClient = idClient;
+    }
+
+    public String getVehicule() {
+        return vehicule;
+    }
+
+    public void setVehicule(String vehicule) {
+        this.vehicule = vehicule;
+    }
+
+    public String getBagage() {
+        return bagage;
+    }
+
+    public void setBagage(String bagage) {
+        this.bagage = bagage;
+    }
+    
+    
     
     
     
