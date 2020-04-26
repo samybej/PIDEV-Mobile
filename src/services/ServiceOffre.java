@@ -14,9 +14,11 @@ import com.codename1.l10n.ParseException;
 import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.ui.events.ActionListener;
 import entities.Offre;
+import entities.Type;
 import java.io.IOException;
 import java.util.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import utils.Statics;
@@ -28,6 +30,8 @@ import utils.Statics;
 public class ServiceOffre {
     
     public ArrayList<Offre> offres;
+    public ArrayList<Type> types;
+    public Map<Integer,List> map = new HashMap();
     
     public static ServiceOffre instance=null;
     public boolean resultOK;
@@ -60,14 +64,14 @@ public class ServiceOffre {
      
      public ArrayList<Offre> getCovoiturages()
      {
-         String url = Statics.BASE_URL+"/tasks/";
+         String url = Statics.BASE_URL+"api/covoiturages/209";
         req.setUrl(url);
         req.setPost(false);
         req.addResponseListener(new ActionListener<NetworkEvent>() {
             @Override
             public void actionPerformed(NetworkEvent evt) {
                 try {
-                    offres = parseOffres(new String(req.getResponseData()));
+                    map = parseOffres(new String(req.getResponseData()));
                     req.removeResponseListener(this);
                 } catch (ParseException ex) {
                     System.out.println("ahja");
@@ -78,7 +82,7 @@ public class ServiceOffre {
         return offres;
      }
      
-       public ArrayList<Offre> parseOffres(String jsonText) throws ParseException{
+       public Map<Integer,List> parseOffres(String jsonText) throws ParseException{
         try {
             offres=new ArrayList<>();
             JSONParser j = new JSONParser();
@@ -87,32 +91,56 @@ public class ServiceOffre {
             List<Map<String,Object>> list = (List<Map<String,Object>>)offresListJson.get("root");
             for(Map<String,Object> obj : list){
                 Offre o = new Offre();
+                
+                Type t = new Type();
+                
+                //Les donnees mte3 el type
                 float id = Float.parseFloat(obj.get("id").toString());
-                float nbPlace = Float.parseFloat(obj.get("nbPlace").toString());
-                float idOffreur = Float.parseFloat(((Map)obj.get("idOffreur")).get("id").toString());
-                float idClient = Float.parseFloat(((Map)obj.get("idOffreur")).get("id").toString());
-                String date = obj.get("date").toString();
+                float idOffre = Float.parseFloat(((Map)obj.get("idOffre")).get("id").toString());
+                float vitesse = Float.parseFloat(obj.get("vitesse").toString());
+                float nbrArrets = Float.parseFloat(obj.get("nbrArrets").toString());
+                float tmpArret = Float.parseFloat(obj.get("tmpArret").toString());
+                
+                //les donnes mte3 el offre
+                float nbPlace = Float.parseFloat(((Map)obj.get("idOffre")).get("nbPlace").toString());
+                float idOffreur = Float.parseFloat(((Map<Object,Map>)obj.get("idOffre")).get("idOffreur").get("id").toString());
+                float idClient = Float.parseFloat(((Map<Object,Map>)obj.get("idOffre")).get("idClient").get("id").toString());
+                String date = ((Map)obj.get("idOffre")).get("date").toString();
                 Date date_new = new SimpleDateFormat("yyyy-MM-dd").parse(date);
-                o.setId((int)id);
+                
+                
+                
+                o.setId((int)idOffre);
                 o.setNbPlace((int)nbPlace);
-                o.setDepart(obj.get("depart").toString());
-                o.setArrive(obj.get("arrive").toString());
+                o.setDepart(((Map)obj.get("idOffre")).get("depart").toString());
+                o.setArrive(((Map)obj.get("idOffre")).get("arrive").toString());
                 o.setDate(date_new);
-                o.setTime(obj.get("time").toString());
+                o.setTime(((Map)obj.get("idOffre")).get("time").toString());
                 o.setIdOffreur((int)idOffreur);
                 o.setIdClient((int)idClient);
-                o.setVehicule(obj.get("vehicule").toString());
-                o.setBagage(obj.get("bagage").toString());
+                o.setVehicule(((Map)obj.get("idOffre")).get("vehicule").toString());
+                o.setBagage(((Map)obj.get("idOffre")).get("bagage").toString());
+                
+                t.setId((int)id);
+                t.setVitesse((int)vitesse);
+                t.setNbrArrets((int)nbrArrets);
+                t.setTmpArret((int)tmpArret);
+                t.setIdOffre((int)idOffre);
                 
                 
                 offres.add(o);
+                types.add(t);
+                
+                map.put(1,offres);
+                map.put(2,types);
+                
             }
             
             
         } catch (IOException ex) {
             
         }
-        return offres;
+        return map;
     }
 
 }
