@@ -4,12 +4,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Asus/Documents/NetBeansProjects/PIDEV-Mobile/src/entities/Type.java</file>
-            <file>file:/C:/Users/Asus/Documents/NetBeansProjects/PIDEV-Mobile/src/services/ServiceOffre.java</file>
-            <file>jar:file:/C:/Users/Asus/Documents/NetBeansProjects/PIDEV-Mobile/lib/CodenameOne_SRC.zip!/com/codename1/messaging/Message.java</file>
             <file>file:/C:/Users/Asus/Documents/NetBeansProjects/PIDEV-Mobile/src/com/driver/myapp/MyApplication.java</file>
-            <file>file:/C:/Users/Asus/Documents/NetBeansProjects/PIDEV-Mobile/src/gui/ListeCovoiturages.java</file>
-            <file>file:/C:/Users/Asus/Documents/NetBeansProjects/PIDEV-Mobile/src/gui/AddCovoiturage.java</file>
+            <file>file:/C:/Users/Asus/Documents/NetBeansProjects/PIDEV-Mobile/src/gui/AddCovoiturageForm.java</file>
         </group>
     </open-files>
 </project-private>
