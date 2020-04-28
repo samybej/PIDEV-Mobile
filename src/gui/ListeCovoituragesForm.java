@@ -14,9 +14,9 @@ import services.ServiceOffre;
  *
  * @author Asus
  */
-public class ListeCovoiturages extends Form {
+public class ListeCovoituragesForm extends Form {
     
-    public ListeCovoiturages()
+    public ListeCovoituragesForm()
     {
         SpanLabel sp = new SpanLabel();
         sp.setText(ServiceOffre.getInstance().getCovoiturages().toString());
