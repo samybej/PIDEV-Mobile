@@ -51,7 +51,7 @@ public class ServiceOffre {
     }
     
      public boolean ajoutOffre(Offre o) {
-        String url = Statics.BASE_URL + "/api/covoiturages/" + o.getNbPlace()+ "/" + o.getDepart()+ "/" + o.getArrive()+ "/" + o.getDate()+ "/" + o.getTime()+ "/" + o.getTarif()+ "/" + o.getIdOffreur()+ "/" + o.getIdClient()+ "/" + o.getVehicule()+ "/" + o.getBagage();
+        String url = Statics.BASE_URL + "api/ajoutCovoiturages/" + String.valueOf(o.getNbPlace())+ "/" + o.getDepart()+ "/" + o.getArrive()+ "/" + o.getDate()+ "/" + o.getTime()+ "/" + String.valueOf(o.getTarif())+ "/" + String.valueOf(o.getIdClient())+ "/" + o.getVehicule()+ "/" + "m";
         req.setUrl(url);
         req.addResponseListener(new ActionListener<NetworkEvent>() {
             @Override
@@ -118,7 +118,7 @@ public class ServiceOffre {
                 o.setNbPlace((int)nbPlace);
                 o.setDepart(((Map)obj.get("idOffre")).get("depart").toString());
                 o.setArrive(((Map)obj.get("idOffre")).get("arrive").toString());
-                o.setDate(date_new);
+                o.setDate(date);
                 o.setTime(((Map)obj.get("idOffre")).get("time").toString());
                 o.setIdOffreur((int)idOffreur);
                 o.setIdClient((int)idClient);

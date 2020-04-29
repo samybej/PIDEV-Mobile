@@ -17,7 +17,7 @@ public class Offre {
     private int nbPlace;
     private String depart;
     private String arrive;
-    private Date date;
+    private String date;
     private String time;
     private float tarif;
     private int idOffreur;
@@ -28,7 +28,7 @@ public class Offre {
     public Offre() {
     }
 
-    public Offre(int nbPlace, String depart, String arrive, Date date, String time, float tarif, int idOffreur, int idClient, String vehicule, String bagage) {
+    public Offre(int nbPlace, String depart, String arrive, String date, String time, float tarif, int idOffreur, int idClient, String vehicule, String bagage) {
         this.nbPlace = nbPlace;
         this.depart = depart;
         this.arrive = arrive;
@@ -41,7 +41,7 @@ public class Offre {
         this.bagage = bagage;
     }
 
-    public Offre(int id, int nbPlace, String depart, String arrive, Date date, String time, float tarif, int idOffreur, int idClient, String vehicule, String bagage) {
+    public Offre(int id, int nbPlace, String depart, String arrive, String date, String time, float tarif, int idOffreur, int idClient, String vehicule, String bagage) {
         this.id = id;
         this.nbPlace = nbPlace;
         this.depart = depart;
@@ -87,11 +87,11 @@ public class Offre {
         this.arrive = arrive;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -141,6 +141,11 @@ public class Offre {
 
     public void setBagage(String bagage) {
         this.bagage = bagage;
+    }
+
+    @Override
+    public String toString() {
+        return "Offre{" + "id=" + id + ", nbPlace=" + nbPlace + ", depart=" + depart + ", arrive=" + arrive + ", date=" + date + ", time=" + time + ", tarif=" + tarif + ", idOffreur=" + idOffreur + ", idClient=" + idClient + ", vehicule=" + vehicule + ", bagage=" + bagage + '}';
     }
     
     

@@ -6,9 +6,13 @@
 package gui;
 
 import com.codename1.components.ToastBar;
+import com.codename1.l10n.ParseException;
+import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.ui.Button;
 import static com.codename1.ui.CN.SOUTH;
+import com.codename1.ui.Command;
 import com.codename1.ui.Container;
+import com.codename1.ui.Dialog;
 import com.codename1.ui.Display;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
@@ -16,12 +20,18 @@ import com.codename1.ui.Label;
 import com.codename1.ui.PickerComponent;
 import com.codename1.ui.TextArea;
 import com.codename1.ui.TextComponent;
+import com.codename1.ui.events.ActionEvent;
+import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.TextModeLayout;
 import com.codename1.ui.spinner.Picker;
 import com.codename1.ui.validation.NumericConstraint;
 import com.codename1.ui.validation.Validator;
+import entities.Offre;
 import static java.lang.Float.NaN;
+import java.util.Date;
+
+import services.ServiceOffre;
 
 /**
  *
@@ -39,9 +49,13 @@ public class AddCovoiturageForm extends Form {
         
        // FontImage.setMaterialIcon(name.getField().getHintLabel(), FontImage.);
        
-       PickerComponent date = PickerComponent.createDate(null).label("Date");
-       PickerComponent time = PickerComponent.createTime(60).label("Heure");
-        
+     //  PickerComponent date = PickerComponent.createDate(null).label("Date");
+       Picker date2 = new Picker();
+       date2.setFormatter(new SimpleDateFormat("yyyy-MM-dd"));
+       
+       Picker time = new Picker();
+       time.setType(Display.PICKER_TYPE_TIME);
+       
        TextComponent tarif = new TextComponent().labelAndHint("Tarif");
     
        FontImage.setMaterialIcon(tarif.getField().getHintLabel(), FontImage.MATERIAL_MONEY);
@@ -68,7 +82,7 @@ public class AddCovoiturageForm extends Form {
         comps.add(tl.createConstraint().widthPercentage(30), depart);
        // comps.add(tl.createConstraint().horizontalSpan(2), depart);
         comps.add(tl.createConstraint().horizontalSpan(2), arrive);
-        comps.add(tl.createConstraint().horizontalSpan(2), date);
+        comps.add(tl.createConstraint().horizontalSpan(2), date2);
         comps.add(tl.createConstraint().horizontalSpan(2), time);
         comps.add(tl.createConstraint().horizontalSpan(2), tarif);
         comps.add(tl.createConstraint().horizontalSpan(2), vehicule);
@@ -80,12 +94,36 @@ public class AddCovoiturageForm extends Form {
         Container content = BorderLayout.center(comps);
         
         content.add(SOUTH, save);
-        save.addActionListener(e -> {
-            ToastBar.showMessage("Save pressed...", FontImage.MATERIAL_INFO);
-        });
+        save.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent evt) {
+                 try {
+                     String date_string = date2.toString();
+                        String heure =String.valueOf(time.getTime() / 60);
+                        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+                        String dateString = format.format(date2.getDate());
+                        Date date_formatted = format.parse(dateString);
+                        
+                        Offre o = new Offre(Integer.parseInt(nbPlace.getText()), depart.getText(),arrive.getText(),
+                        dateString, heure, Float.parseFloat(tarif.getText()),209,209, vehicule.getText(), bagage.getText());
+                        if( ServiceOffre.getInstance().ajoutOffre(o))
+                            Dialog.show("Success","Connection accepted",new Command("OK"));
+                        else
+                            Dialog.show("ERROR", "Server error", new Command("OK"));
+                       System.out.println(o);
+                    } catch (NumberFormatException e) {
+                        Dialog.show("ERROR", "Status must be a number", new Command("OK"));
+                    } catch (ParseException ex) {
+                    
+                }
+            }
+        }
+            
+        );
         
         content.setUIID("InputContainerForeground");
         
+        //ToastBar.showMessage("Save pressed...", FontImage.MATERIAL_INFO);
         addAll(content);
        
         
