@@ -106,10 +106,18 @@ public class AddCovoiturageForm extends Form {
                         
                         Offre o = new Offre(Integer.parseInt(nbPlace.getText()), depart.getText(),arrive.getText(),
                         dateString, heure, Float.parseFloat(tarif.getText()),209,209, vehicule.getText(), bagage.getText());
-                        if( ServiceOffre.getInstance().ajoutOffre(o))
-                            Dialog.show("Success","Connection accepted",new Command("OK"));
+                       float id = ServiceOffre.getInstance().ajoutOffre(o);
+                        if( id != 0)
+                        {
+                             new AddTypeForm((int)id).show();
+                        }
+                            
                         else
-                            Dialog.show("ERROR", "Server error", new Command("OK"));
+                        {
+                  
+                             Dialog.show("ERROR", "Server error" + id, new Command("OK"));
+                        }
+                           
                        System.out.println(o);
                     } catch (NumberFormatException e) {
                         Dialog.show("ERROR", "Status must be a number", new Command("OK"));

@@ -37,6 +37,7 @@ public class ServiceOffre {
     
     public static ServiceOffre instance=null;
     public boolean resultOK;
+    public float id;
     private ConnectionRequest req;
 
     private ServiceOffre() {
@@ -50,19 +51,62 @@ public class ServiceOffre {
         return instance;
     }
     
-     public boolean ajoutOffre(Offre o) {
-        String url = Statics.BASE_URL + "api/ajoutCovoiturages/" + String.valueOf(o.getNbPlace())+ "/" + o.getDepart()+ "/" + o.getArrive()+ "/" + o.getDate()+ "/" + o.getTime()+ "/" + String.valueOf(o.getTarif())+ "/" + String.valueOf(o.getIdClient())+ "/" + o.getVehicule()+ "/" + "m";
+     public int ajoutOffre(Offre o)  {
+        String url = Statics.BASE_URL + "api/ajoutCovoiturages/" + String.valueOf(o.getNbPlace())+ "/" + o.getDepart()+ "/" + o.getArrive()+ "/" + o.getDate()+ "/" + o.getTime()+ "/" + String.valueOf(o.getTarif())+ "/" + String.valueOf(o.getIdClient())+ "/" + o.getVehicule()+ "/" + o.getBagage();
         req.setUrl(url);
+       //float id;
         req.addResponseListener(new ActionListener<NetworkEvent>() {
             @Override
             public void actionPerformed(NetworkEvent evt) {
                 resultOK = req.getResponseCode() == 200; //Code HTTP 200 OK
+                if (resultOK)
+                {
+                    String jsonText = new String(req.getResponseData());
+                    
+                    JSONParser j = new JSONParser();
+                    Map<String,Object> offresListJson = new HashMap<>();
+                    
+                    try {
+                      offresListJson  = j.parseJSON(new CharArrayReader(jsonText.toCharArray()));
+
+                    } catch (IOException ex) {
+                  
+                    }
+                    id = Float.parseFloat(offresListJson.get("id").toString());
+                    
+                }
                 req.removeResponseListener(this);
             }
         });
         NetworkManager.getInstance().addToQueueAndWait(req);
-        return resultOK;
+        return (int)id;
     }
+     
+     
+     public ArrayList<Offre> rechercherCovoiturage(String date,String depart,String arrive)
+     {
+        String url = Statics.BASE_URL+"api/rechercherCovoiturage/" + date + "/" + depart + "/" + arrive;
+        req.setUrl(url);
+        req.setPost(false);
+         req.addResponseListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                
+                    offres = parseRecherche(new String(req.getResponseData()));                 
+                    req.removeResponseListener(this);          
+            }
+        });
+        NetworkManager.getInstance().addToQueueAndWait(req);
+         
+         return offres;
+     }
+     
+     public ArrayList<Offre> parseRecherche(String jsonText)
+     {
+         offres=new ArrayList<>();
+         
+         return offres;
+     }
      
      public Map<Integer,List> getCovoiturages()
      {
@@ -75,6 +119,7 @@ public class ServiceOffre {
                 try {
                     
                     map = parseOffres(new String(req.getResponseData()));
+                    
                     req.removeResponseListener(this);
                 } catch (ParseException ex) {
                     System.out.println("ahja");

@@ -60,7 +60,7 @@ public class MyApplication {
     }
     
     public void start() {
-        new AddCovoiturageForm().show();
+        new ListeCovoituragesForm(new BorderLayout()).show();
 
     }
 
