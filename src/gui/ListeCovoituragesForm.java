@@ -6,10 +6,13 @@
 package gui;
 
 import com.codename1.components.SpanLabel;
+import com.codename1.ui.Command;
 import com.codename1.ui.Container;
 import com.codename1.ui.FontImage;
 import com.codename1.ui.Form;
 import com.codename1.ui.Label;
+import com.codename1.ui.events.ActionEvent;
+import com.codename1.ui.events.ActionListener;
 import com.codename1.ui.layouts.BorderLayout;
 import com.codename1.ui.layouts.BoxLayout;
 import entities.Offre;
@@ -74,6 +77,32 @@ public class ListeCovoituragesForm extends Form {
             }
             
         }
+        
+         getToolbar().addCommandToSideMenu("rechercher", null, new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent evt) {
+                new RechercherCovoiturageForm().show();
+             }
+         });
+         getToolbar().addCommandToSideMenu("ajouter", null, new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent evt) {
+                new AddCovoiturageForm().show();
+             }
+         });
+         getToolbar().addCommandToSideMenu("mes covoiturages", null, new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent evt) {
+                 new ListeCovoituragesForm(new BorderLayout()).show();
+             }
+         });
+         
+         setBackCommand(new Command("back"){
+             @Override
+            public void actionPerformed(ActionEvent evt) {
+                new AddCovoiturageForm().showBack();
+            }
+         });
         
         add(c1);
               

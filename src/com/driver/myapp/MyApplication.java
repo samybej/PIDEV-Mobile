@@ -25,6 +25,8 @@ import gui.ListeCovoituragesForm;
 
 import gui.ListReservation;
 import gui.AddReservation;
+import gui.RechercherCovoiturageForm;
+import gui.ResultatCovoiturageForm;
 
 
 /**
@@ -60,7 +62,7 @@ public class MyApplication {
     }
     
     public void start() {
-        new ListeCovoituragesForm(new BorderLayout()).show();
+        new RechercherCovoiturageForm().show();
 
     }
 

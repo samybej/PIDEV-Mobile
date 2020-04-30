@@ -15,6 +15,7 @@ import com.codename1.l10n.SimpleDateFormat;
 import com.codename1.messaging.Message;
 import com.codename1.ui.Display;
 import com.codename1.ui.events.ActionListener;
+import entities.Client;
 import entities.Offre;
 import entities.Type;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import utils.Statics;
 
 /**
@@ -33,7 +35,9 @@ public class ServiceOffre {
     
     public ArrayList<Offre> offres;
     public ArrayList<Type> types;
-    public Map<Integer,List> map = new HashMap();
+    public ArrayList<Client> clients;
+    public Map<Integer,List> map;
+    public Map<Offre,Client> mapRecherche = new HashMap<>();
     
     public static ServiceOffre instance=null;
     public boolean resultOK;
@@ -51,6 +55,22 @@ public class ServiceOffre {
         return instance;
     }
     
+    public boolean inscriOffre(int idOffre,int idClient,int idOffreur)
+    {
+        String url = Statics.BASE_URL + "api/inscriCovoiturage/" + idOffre + "/" + idClient + "/" + idOffreur;
+        req.setUrl(url);
+        
+         req.addResponseListener(new ActionListener<NetworkEvent>() {
+            @Override
+            public void actionPerformed(NetworkEvent evt) {
+                resultOK = req.getResponseCode() == 200; //Code HTTP 200 OK
+                req.removeResponseListener(this);
+            }
+        });
+        NetworkManager.getInstance().addToQueueAndWait(req);
+        return resultOK;
+        
+    }
      public int ajoutOffre(Offre o)  {
         String url = Statics.BASE_URL + "api/ajoutCovoiturages/" + String.valueOf(o.getNbPlace())+ "/" + o.getDepart()+ "/" + o.getArrive()+ "/" + o.getDate()+ "/" + o.getTime()+ "/" + String.valueOf(o.getTarif())+ "/" + String.valueOf(o.getIdClient())+ "/" + o.getVehicule()+ "/" + o.getBagage();
         req.setUrl(url);
@@ -83,7 +103,7 @@ public class ServiceOffre {
     }
      
      
-     public ArrayList<Offre> rechercherCovoiturage(String date,String depart,String arrive)
+     public Map<Offre,Client> rechercherCovoiturage(String date,String depart,String arrive)
      {
         String url = Statics.BASE_URL+"api/rechercherCovoiturage/" + date + "/" + depart + "/" + arrive;
         req.setUrl(url);
@@ -92,20 +112,82 @@ public class ServiceOffre {
             @Override
             public void actionPerformed(NetworkEvent evt) {
                 
-                    offres = parseRecherche(new String(req.getResponseData()));                 
-                    req.removeResponseListener(this);          
+                try {
+                    mapRecherche = parseRecherche(new String(req.getResponseData()));          
+                    req.removeResponseListener(this);
+                } catch (IOException ex) {
+                 
+                }
             }
         });
         NetworkManager.getInstance().addToQueueAndWait(req);
          
-         return offres;
+         return mapRecherche;
      }
      
-     public ArrayList<Offre> parseRecherche(String jsonText)
+     public Map<Offre,Client> parseRecherche(String jsonText) throws IOException
      {
          offres=new ArrayList<>();
+         clients = new ArrayList<>();
+         map = new HashMap<>();
          
-         return offres;
+         JSONParser j = new JSONParser();
+         Map<String,Object> offresListJson = j.parseJSON(new CharArrayReader(jsonText.toCharArray()));
+         
+         List<Map<String,Object>> list = (List<Map<String,Object>>)offresListJson.get("root");
+         
+         for(Map<String,Object> obj : list){
+             Offre o = new Offre();
+             Client c = new Client();
+             
+             //Données de l'offre
+             float id = Float.parseFloat(obj.get("id").toString());
+             float nbPlace = Float.parseFloat(obj.get("nbPlace").toString());
+             String depart = obj.get("depart").toString();
+             String arrive = obj.get("arrive").toString();
+             String date = obj.get("date").toString();
+             String time = obj.get("time").toString();
+             float tarif = Float.parseFloat(obj.get("tarif").toString());
+             String vehicule = obj.get("vehicule").toString();
+             String bagage = obj.get("bagage").toString();
+             
+             //Données du client
+             float idClient = Float.parseFloat(((Map)obj.get("idClient")).get("id").toString()) ;
+             String nom = ((Map)obj.get("idClient")).get("nom").toString();
+             String prenom = ((Map)obj.get("idClient")).get("prenom").toString();
+             float tel = Float.parseFloat(((Map)obj.get("idClient")).get("tel").toString()) ;
+             String adresse = ((Map)obj.get("idClient")).get("adresse").toString();
+             String mdp = ((Map)obj.get("idClient")).get("mdp").toString();
+             String mail = ((Map)obj.get("idClient")).get("mail").toString();
+             
+             o.setId((int)id);
+             o.setNbPlace((int)nbPlace);
+             o.setDepart(depart);
+             o.setArrive(arrive);
+             o.setDate(date);
+             o.setTime(time);
+             o.setTarif(tarif);
+             o.setVehicule(vehicule);
+             o.setBagage(bagage);
+             o.setIdOffreur((int)idClient);
+             o.setIdClient((int)idClient);
+             
+             c.setId((int)idClient);
+             c.setNom(nom);
+             c.setPrenom(prenom);
+             c.setTel((int)tel);
+             c.setAdresse(adresse);
+             c.setMdp(mdp);
+             c.setMail(mail);
+             
+             offres.add(o);
+             clients.add(c);
+             
+             mapRecherche.put(o, c);
+             
+             
+         }
+         return mapRecherche;
      }
      
      public Map<Integer,List> getCovoiturages()

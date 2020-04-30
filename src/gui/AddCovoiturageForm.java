@@ -131,6 +131,27 @@ public class AddCovoiturageForm extends Form {
         
         content.setUIID("InputContainerForeground");
         
+        
+         getToolbar().addCommandToSideMenu("rechercher", null, new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent evt) {
+                new RechercherCovoiturageForm().show();
+             }
+         });
+         getToolbar().addCommandToSideMenu("ajouter", null, new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent evt) {
+                new AddCovoiturageForm().show();
+             }
+         });
+         getToolbar().addCommandToSideMenu("mes covoiturages", null, new ActionListener() {
+             @Override
+             public void actionPerformed(ActionEvent evt) {
+                 new ListeCovoituragesForm(new BorderLayout()).show();
+             }
+         });
+         
+
         //ToastBar.showMessage("Save pressed...", FontImage.MATERIAL_INFO);
         addAll(content);
        
